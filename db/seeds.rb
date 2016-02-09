@@ -47,6 +47,7 @@ files.each do |file|
   @flight.import_from_csv(file)
 end
 
+# Uncomment to seed flight data via urls (no longer advised)
 #--------------------
 # seed from URLs
 
@@ -149,10 +150,55 @@ end
 
 
 Comment.create(user_id: 1, flight_id: 1, status: 1, data_point_id: 5, body: "Ready to launch...")
-Comment.create(user_id: 3, flight_id: 1, status: 1, data_point_id: 5, body: "I was so excited right now!!!")
+Comment.create(user_id: 3, flight_id: 1, status: 1, data_point_id: 25, body: "I was so excited right now!!!")
 Comment.create(user_id: 2, flight_id: 1, status: 1, data_point_id: 56, body: "Here we go!")
 Comment.create(user_id: 9, flight_id: 1, status: 1, data_point_id: 247, body: "@cody this is when it did that thing with the pressure")
 Comment.create(user_id: 21, flight_id: 1, status: 1, data_point_id: 588, body: "Here comes the drop!!!!!")
 Comment.create(user_id: 13, flight_id: 1, status: 1, data_point_id: 670, body: "That's dropping so fast omg!")
 Comment.create(user_id: 4, flight_id: 1, status: 1, data_point_id: 770, body: "aw man it's over :(")
 
+phrases = [
+            'this was so exciting',
+            'I remember this part...',
+            'wow!!!',
+            'XD XD XD',
+            'this is crazy!',
+            'great job guys',
+            'this flight is one of my faves',
+            'we almost lost that balloon :)',
+            'next stop, space!',
+            'I was so excited right now!!!',
+            'remember this part?',
+            'This was so much fun',
+            'look at all those dials!'
+            'COOOOOL!!!!!',
+            'Amazing!',
+            'how sweet is this!?',
+            'how high up do these go?',
+            'look at that map!',
+            'neato',
+            'oooooo cool chart!',
+            'this made me love science',
+            'physics is dope'
+            'nerdz 4 lyfe!!!!'
+          ]
+
+status = 1
+(2..15).each do | flight_id |
+  flight = Flight.find(flight_id)
+  first_data_point_id = flight.data_points.first.id
+  last_data_point_id = flight.data_points.last.id
+  counter = first_data_point_id + rand(50)
+  while counter < last_data_point_id
+    user_id = rand(75) + 1
+    body = phrases.sample
+    comment = Comment.new
+    comment.user_id = user_id
+    comment.flight_id = flight_id
+    comment.data_point_id = counter
+    comment.body = body
+    comment.status = status
+    comment.save!
+    counter += rand(40) + 80
+  end
+end
